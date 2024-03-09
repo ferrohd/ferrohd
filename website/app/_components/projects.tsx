@@ -29,8 +29,8 @@ export default function Projects() {
         <section id="projects" className="w-full py-12 md:py-24 lg:py-32">
             <div className="container  mx-auto grid gap-6 px-4 md:gap-10 md:px-6">
                 <div className="space-y-3">
-                    <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl xl:text-5xl/none">Stuff I've Built</h2>
-                    <p className="text-gray-500 dark:text-gray-400">Here are some of the projects I've worked on.</p>
+                    <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl xl:text-5xl/none">Stuff I&apos;ve Built</h2>
+                    <p className="text-gray-500 dark:text-gray-400">Talk is cheap. Show me the code.</p>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-12">
                     {
