@@ -1,9 +1,7 @@
+import Email from "./email"
+
 export default function Contact() {
     const contacts = [
-        {
-            title: "Email",
-            value: "contact@example.com",
-        },
         {
             title: "LinkedIn",
             value: "linkedin.com/in/aleferrara",
@@ -25,7 +23,8 @@ export default function Contact() {
                     <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl xl:text-5xl/none">Get in touch</h2>
                     <p className="text-gray-500 dark:text-gray-400">Reach me through the following channels.</p>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-12">
+                    <Email />
                     {
                         contacts.map((contact, index) => (
                             <div key={index}>
