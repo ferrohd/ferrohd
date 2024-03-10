@@ -30,7 +30,7 @@ export default function Home() {
         </nav>
       </header>
       <main className="flex-1">
-        <section className="w-full py-12 md:py-24 lg:py-32">
+        <section className="w-full py-12 md:py-24 lg:py-32 h-screen">
           <div className="container mx-auto flex flex-col items-center justify-center gap-4 px-4 md:px-6 lg:gap-10">
             <div className="space-y-3 text-center">
               <h1 className="text-3xl font-bold tracking-tighter sm:text-6xl md:text-6xl/none">Hi, I&apos;m Ferro👋</h1>
@@ -61,7 +61,7 @@ export default function Home() {
                 alt="Image"
                 className="aspect-[4/3] object-cover object-center"
                 height="300"
-                src="/placeholder.svg"
+                src="/next.svg"
                 width="400"
               />
             </div>
