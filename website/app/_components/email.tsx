@@ -3,10 +3,11 @@
 import { FocusEventHandler } from "react";
 
 export default function Email() {
-    let emailb64 = "Y2FsbGJhY2tAZ21haWwuY29t";
+    const emailb64 = "Y2FsbGJhY2tAZ21haWwuY29t";
 
     const onFocus: FocusEventHandler<HTMLAnchorElement> = (e) => {
-        const email = atob(emailb64);
+        e.preventDefault();
+        const email = Buffer.from(emailb64, 'base64').toString('utf-8');
         e.target.innerHTML = email;
         e.target.href = `mailto:${email}`;
     };
@@ -14,7 +15,7 @@ export default function Email() {
     return (
         <div>
             <h3 className="text-lg font-semibold">Email</h3>
-            <a href="#" className="hover:underline" onFocus={onFocus}>Click me</a>
+            <a href="" className="hover:underline" onFocus={onFocus}>Click me</a>
         </div>
     )
 }
