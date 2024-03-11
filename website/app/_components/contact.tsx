@@ -9,11 +9,7 @@ export default function Contact() {
         {
             title: "GitHub",
             value: "github.com/ferrohd",
-        },
-        {
-            title: "Twitter",
-            value: "",
-        },
+        }
     ]
 
     return (

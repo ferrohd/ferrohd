@@ -27,6 +27,9 @@ export default function Home() {
           <Link className="text-lg font-medium hover:underline underline-offset-4" href="#contact">
             Contact
           </Link>
+          <Link className="text-lg font-medium hover:underline underline-offset-4" href="#">
+            CV
+          </Link>
         </nav>
       </header>
       <main className="flex-1">

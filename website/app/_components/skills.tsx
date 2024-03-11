@@ -19,6 +19,10 @@ export default function Skills() {
         {
             title: "Docker and Kubernetes",
             description: "My experience with Docker and Kubernetes has been focused on building and maintaining scalable and reliable infrastructure. I've worked on setting up and managing Kubernetes clusters, creating Docker images, and deploying applications to Kubernetes.",
+        },
+        {
+            title: "Cloud Platforms",
+            description: "I have experience working with cloud platforms like AWS, GCP, and DigitalOcean. I've worked on setting up and maintaining infrastructure, managing services like EC2, S3, and RDS, and ensuring that the applications are scalable and reliable."
         }
     ]
     return (
