@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { JSX, SVGProps } from "react"
+import Image from "next/image"
 import Contact from "./_components/contact"
 import Projects from "./_components/projects"
 import Skills from "./_components/skills"
@@ -50,12 +50,9 @@ export default function Home() {
               </p>
             </div>
             <div className="mx-auto flex items-center justify-center rounded-lg overflow-hidden w-full max-w-md">
-              <img
-                alt="Image"
-                className="aspect-[4/3] object-cover object-center"
-                height="300"
-                src="/next.svg"
-                width="400"
+              <Image
+                src="todo.jpg"
+                alt="Alessandro Ferrara"
               />
             </div>
           </div>
