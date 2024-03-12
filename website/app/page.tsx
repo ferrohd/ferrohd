@@ -50,10 +50,12 @@ export default function Home() {
               </p>
             </div>
             <div className="mx-auto flex items-center justify-center rounded-lg overflow-hidden w-full max-w-md">
-              <Image
+              {/*<Image
                 src="todo.jpg"
                 alt="Alessandro Ferrara"
+                fill={true}
               />
+              */}
             </div>
           </div>
         </section>
