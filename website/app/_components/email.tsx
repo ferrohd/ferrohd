@@ -3,7 +3,7 @@
 import { FocusEventHandler } from "react";
 
 export default function Email() {
-    const emailb64 = "Y2FsbGJhY2tAZ21haWwuY29t";
+    const emailb64 = "YWxlc3NhbmRybzIuZmVycmFyYUBtYWlsLnBvbGltaS5pdA==";
 
     const onFocus: FocusEventHandler<HTMLAnchorElement> = (e) => {
         e.preventDefault();
