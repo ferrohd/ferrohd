@@ -1,3 +1,4 @@
+import Link from "next/link"
 import Email from "./email"
 
 export default function Contact() {
@@ -24,7 +25,7 @@ export default function Contact() {
                     contacts.map((contact, index) => (
                         <div key={index}>
                             <h3 className="text-lg font-semibold">{contact.title}</h3>
-                            <a href={contact.url} className="hover:underline">{contact.url.replace("https://", "")}</a>
+                            <Link href={contact.url} className="hover:underline">{contact.url.replace("https://", "")}</Link>
                         </div>
                     ))
                 }
