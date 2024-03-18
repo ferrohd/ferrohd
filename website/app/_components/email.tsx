@@ -1,21 +1,17 @@
 'use client';
 
-import { FocusEventHandler } from "react";
-
+/**
+ * Crawlers don't execute JavaScript. The email is sent as a base64 encoded string and then decoded on the client side.
+ * @returns Email component
+ */
 export default function Email() {
     const emailb64 = "YWxlc3NhbmRybzIuZmVycmFyYUBtYWlsLnBvbGltaS5pdA==";
-
-    const onFocus: FocusEventHandler<HTMLAnchorElement> = (e) => {
-        e.preventDefault();
-        const email = Buffer.from(emailb64, 'base64').toString('utf-8');
-        e.target.innerHTML = email;
-        e.target.href = `mailto:${email}`;
-    };
+    const email = Buffer.from(emailb64, 'base64').toString('utf-8');
 
     return (
         <div>
             <h3 className="text-lg font-semibold">Email</h3>
-            <a href="" className="hover:underline" onFocus={onFocus}>Click me</a>
+            <a href={`mailto:${email}`} className="hover:underline">{email}</a>
         </div>
     )
 }
