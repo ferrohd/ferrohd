@@ -3,6 +3,7 @@ import Image from "next/image"
 import Contact from "./_components/contact"
 import Projects from "./_components/projects"
 import Skills from "./_components/skills"
+import Bio from "./_components/bio"
 
 export default function Home() {
   return (
@@ -41,24 +42,11 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="bio" className="w-full py-12 md:py-24 lg:py-24">
-          <div className="container mx-auto grid items-start gap-6 px-4 md:px-6 lg:grid-cols-2 lg:gap-10">
-            <div className="space-y-4">
-              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl xl:text-5xl/none">About Me</h2>
-              <p className="max-w-[600px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-400">
-                I&apos;m an Italian engineer with an MSc in Computer Science and Engineering specialized in building scalable and efficient systems. My expertise lies in designing and optimizing databases, crafting robust APIs, and ensuring seamless integration between services. I love diving into complex problems and finding elegant solutions. When I&apos;m not coding, I&apos;m riding my bike as fast as my code.
-              </p>
-            </div>
-            <div className="mx-auto flex items-center justify-center rounded-lg overflow-hidden w-full max-w-md">
-              {/*<Image
-                src="todo.jpg"
-                alt="Alessandro Ferrara"
-                fill={true}
-              />
-              */}
-            </div>
-          </div>
+        {/** Bio */}
+        <section id="bio" className="w-full py-12 md:py-18 lg:py-24">
+          <Bio />
         </section>
+
         {/** Skills */}
         <section id="skills" className="w-full py-12 md:py-18 lg:py-24">
           <Skills />
