@@ -26,23 +26,21 @@ export default function Skills() {
         }
     ]
     return (
-        <section id="skills" className="w-full py-12 md:py-24 lg:py-32">
-            <div className="container  mx-auto grid gap-6 px-4 md:gap-10 md:px-6">
-                <div className="space-y-3">
-                    <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl xl:text-5xl/none">My Skills</h2>
-                    <p className="text-gray-500 dark:text-gray-400">Here are some of the projects I&apos;ve worked on.</p>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-12">
-                    {
-                        skills.map((skill, index) => (
-                            <div key={index} className="space-y-4">
-                                <h3 className="text-2xl font-bold tracking-tight">{skill.title}</h3>
-                                <p className="max-w-prose text-gray-500 md:text-base/relaxed dark:text-gray-400">{skill.description}</p>
-                            </div>
-                        ))
-                    }
-                </div>
+        <div className="container  mx-auto grid gap-6 px-4 md:gap-10 md:px-6">
+            <div className="space-y-3">
+                <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl xl:text-5xl/none">My Skills</h2>
+                <p className="text-gray-500 dark:text-gray-400">Here are some of the projects I&apos;ve worked on.</p>
             </div>
-        </section>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-12">
+                {
+                    skills.map((skill, index) => (
+                        <div key={index} className="space-y-4">
+                            <h3 className="text-2xl font-bold tracking-tight">{skill.title}</h3>
+                            <p className="max-w-prose text-gray-500 md:text-base/relaxed dark:text-gray-400">{skill.description}</p>
+                        </div>
+                    ))
+                }
+            </div>
+        </div>
     )
 }
