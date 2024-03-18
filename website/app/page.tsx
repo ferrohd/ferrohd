@@ -41,7 +41,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="bio" className="w-full py-12 md:py-24 lg:py-32">
+        <section id="bio" className="w-full py-12 md:py-24 lg:py-24">
           <div className="container mx-auto grid items-start gap-6 px-4 md:px-6 lg:grid-cols-2 lg:gap-10">
             <div className="space-y-4">
               <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl xl:text-5xl/none">About Me</h2>
@@ -60,13 +60,19 @@ export default function Home() {
           </div>
         </section>
         {/** Skills */}
-        <Skills />
+        <section id="skills" className="w-full py-12 md:py-18 lg:py-24">
+          <Skills />
+        </section>
 
         {/** Projects */}
-        <Projects />
+        <section id="projects" className="w-full py-12 md:py-18 lg:py-24">
+          <Projects />
+        </section>
 
         {/** Contact */}
-        <Contact />
+        <section id="contact" className="w-full py-12 md:py-18 lg:py-24">
+          <Contact />
+        </section>
       </main>
 
       {/** Footer */}
