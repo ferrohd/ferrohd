@@ -19,6 +19,11 @@ export default function Projects() {
             link: "https://github.com/ferrohd/CLup",
         },
         {
+            title: "Mikrotik-rs",
+            description: "Rust library for interacting with MikroTik RouterOS devices, providing a high-level API to manage devices, interfaces, and firewall rules, with a focus on performance and reliability. Designed with concurrent command execution in mind.",
+            link: "https://github.com/ferrohd/mikrotik-rs",
+        },
+        {
             title: "Benziina",
             description: "Native app for iOS and Android, providing realtime gas prices, maps-like navigation with geolocation, plus details on gas stations' features and timetables, optimizing your refueling experience.",
             link: "https://benziina.app",
