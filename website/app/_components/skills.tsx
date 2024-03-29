@@ -2,19 +2,19 @@ export default function Skills() {
     const skills = [
         {
             title: "Rust",
-            description: "I have experience building and maintaining applications in Rust. I've worked on a variety of projects, including web services, command-line tools, and system utilities. I'm familiar with the language's features and ecosystem, and I've used it to build high-performance and reliable software.",
+            description: "Expertise in Rust involved in developing a variety of projects, including but not limited to web services, command-line interfaces, and system utilities. Familiarity with the language's features and its ecosystem has enabled me to leverage Rust for building high-performance, reliable software.",
         },
         {
             title: "Database",
-            description: "I have experience designing and optimizing databases, including relational and NoSQL databases. I've worked on creating efficient schemas, optimizing queries, and ensuring data integrity. I'm familiar with database management systems like PostgreSQL, MySQL, and MongoDB.",
+            description: "Proven experience in designing and optimizing both relational and NoSQL databases.This includes crafting efficient schemas, optimizing queries for performance, and ensuring data integrity.Proficient with PostgreSQL, MySQL, and MongoDB, my work has significantly improved database management and access.",
         },
         {
             title: "Linux",
-            description: "I have experience working with Linux systems, including setting up and maintaining servers, managing user accounts, and configuring networking. I'm familiar with the Linux command line and have worked with a variety of distributions, including Ubuntu, CentOS, and Arch Linux.",
+            description: "I have experience working with Linux systems, including setting up and maintaining servers, managing user accounts, and configuring networking. I'm familiar with the Linux command line and have worked with a variety of distributions, including Ubuntu and Arch Linux.",
         },
         {
             title: "CI/CD",
-            description: "I have experience setting up and maintaining CI/CD pipelines using tools like Jenkins, GitHub Actions, and CircleCI. I've worked on automating the deployment process, setting up continuous integration, and ensuring that the code is tested and deployed reliably.",
+            description: "In-depth experience in setting up and maintaining CI/CD pipelines, particularly utilizing GitHub Actions. My focus has been on automating the deployment process, encompassing continuous integration and delivery, to ensure that code is tested, deployed, and released efficiently and reliably.",
         },
         {
             title: "Docker and Kubernetes",
@@ -22,14 +22,14 @@ export default function Skills() {
         },
         {
             title: "Cloud Platforms",
-            description: "I have experience working with cloud platforms like AWS, GCP, and DigitalOcean. I've worked on setting up and maintaining infrastructure, managing services like EC2, S3, and RDS, and ensuring that the applications are scalable and reliable."
-        }
+            description: "Hands-on experience with cloud platforms such as AWS, GCP, and DigitalOcean, specializing in setting up and managing robust infrastructure. My role has encompassed managing services including EC2, S3, and RDS, focusing on scalability, reliability, and optimizing performance for diverse applications."
+        },
     ]
     return (
         <div className="container  mx-auto grid gap-6 px-4 md:gap-10 md:px-6">
             <div className="space-y-3">
                 <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl xl:text-5xl/none">My Skills</h2>
-                <p className="text-gray-500 dark:text-gray-400">Here are some of the projects I&apos;ve worked on.</p>
+                <p className="text-gray-500 dark:text-gray-400">A precise toolbox for crafting efficient solutions.</p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-12">
                 {
