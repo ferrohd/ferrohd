@@ -25,7 +25,7 @@ export default function Contact() {
                     contacts.map((contact, index) => (
                         <div key={index}>
                             <h3 className="text-lg font-semibold">{contact.title}</h3>
-                            <Link href={contact.url} className="hover:underline">{contact.url.replace("https://", "")}</Link>
+                            <Link href={contact.url} target="_blank" className="hover:underline">{contact.url}</Link>
                         </div>
                     ))
                 }
