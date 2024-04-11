@@ -6,6 +6,28 @@ import Skills from "./_components/skills"
 import Bio from "./_components/bio"
 
 export default function Home() {
+  const navLinks = [
+    {
+      title: "Bio",
+      url: "#bio",
+    },
+    {
+      title: "Skills",
+      url: "#skills",
+    },
+    {
+      title: "Projects",
+      url: "#projects",
+    },
+    {
+      title: "Contact",
+      url: "#contact",
+    },
+    {
+      title: "CV",
+      url: "#",
+    }
+  ];
   return (
     <div className="flex flex-col min-h-[100dvh]">
       <header className="px-4 lg:px-6 py-6 flex flex-col gap-1">
@@ -16,21 +38,13 @@ export default function Home() {
           </div>
         </div>
         <nav className="flex mx-auto gap-4 sm:gap-6 pt-6">
-          <Link className="text-lg font-medium hover:underline underline-offset-4" href="#bio">
-            Bio
-          </Link>
-          <Link className="text-lg font-medium hover:underline underline-offset-4" href="#skills">
-            Skills
-          </Link>
-          <Link className="text-lg font-medium hover:underline underline-offset-4" href="#projects">
-            Projects
-          </Link>
-          <Link className="text-lg font-medium hover:underline underline-offset-4" href="#contact">
-            Contact
-          </Link>
-          <Link className="text-lg font-medium hover:underline underline-offset-4" href="#">
-            CV
-          </Link>
+          {
+            navLinks.map((link, index) => (
+              <Link key={index} className="text-lg font-medium hover:underline underline-offset-4" href={link.url}>
+                {link.title}
+              </Link>
+            ))
+          }
         </nav>
       </header>
       <main className="flex-1">
