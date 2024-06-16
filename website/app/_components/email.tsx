@@ -11,7 +11,7 @@ export default function Email() {
     return (
         <div>
             <h3 className="text-lg font-semibold">Email</h3>
-            <a href={`mailto:${email}`} className="bg-gradient-to-r from-[#FC540C] to-[#FFD76F] bg-clip-text text-transparent hover:underline">{email}</a>
+            <a href={`mailto:${email}`} className="hover:underline">{email}</a>
         </div>
     )
 }
