@@ -48,7 +48,7 @@ export default function Projects() {
                             <h3 className="text-2xl font-bold tracking-tight">{project.title}</h3>
                             <p className="max-w-prose text-gray-500 md:text-base/relaxed dark:text-gray-400">{project.description}</p>
                             <Link
-                                className="inline-flex h-10 items-center justify-center rounded-md border border-gray-200 bg-white px-8 text-sm font-medium shadow-sm gap-1 transition-colors hover:bg-gray-100 hover:text-gray-900 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:border-gray-800 dark:bg-gray-950 dark:hover:bg-gray-800 dark:hover:text-gray-50 dark:focus-visible:ring-gray-300"
+                                className="inline-flex h-10 items-center justify-center rounded-md border border-gray-200 bg-white px-8 text-sm font-medium shadow-xs gap-1 transition-colors hover:bg-gray-100 hover:text-gray-900 focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:border-gray-800 dark:bg-gray-950 dark:hover:bg-gray-800 dark:hover:text-gray-50 dark:focus-visible:ring-gray-300"
                                 href={project.link}
                                 target="_blank"
                             >
