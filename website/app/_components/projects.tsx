@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { SVGProps } from "react"
+import { JSX, SVGProps } from "react"
 
 export default function Projects() {
     const projects = [
