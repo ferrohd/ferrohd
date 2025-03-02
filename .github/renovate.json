@@ -14,6 +14,7 @@
             "matchManagers": [
                 "npm"
             ],
+            "rangeStrategy": "update-lockfile",
             "separateMajorMinor": true,
             "separateMultipleMajor": true,
             "separateMinorPatch": true
