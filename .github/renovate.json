@@ -14,13 +14,18 @@
             "matchManagers": [
                 "npm"
             ],
-            "automerge": true
+            "separateMajorMinor": true,
+            "separateMultipleMajor": true,
+            "separateMinorPatch": true
         },
         {
             "groupName": "GitHub Actions",
             "matchManagers": [
                 "github-actions"
-            ]
+            ],
+            "separateMajorMinor": true,
+            "separateMultipleMajor": true,
+            "separateMinorPatch": true
         }
     ],
     "vulnerabilityAlerts": {
