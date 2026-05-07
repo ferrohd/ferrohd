@@ -10,16 +10,6 @@
     "automerge": true,
     "packageRules": [
         {
-            "groupName": "Node Dependencies",
-            "matchManagers": [
-                "npm"
-            ],
-            "rangeStrategy": "update-lockfile",
-            "separateMajorMinor": true,
-            "separateMultipleMajor": true,
-            "separateMinorPatch": true
-        },
-        {
             "groupName": "GitHub Actions",
             "matchManagers": [
                 "github-actions"

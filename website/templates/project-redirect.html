@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% set link = page.extra.repo | default(value=page.extra.homepage | default(value="/projects")) %}
+    <meta http-equiv="refresh" content="0; url={{ link }}">
+    <title>Redirecting…</title>
+</head>
+<body>
+    <p>Redirecting to <a href="{{ link }}">{{ link }}</a>…</p>
+</body>
+</html>

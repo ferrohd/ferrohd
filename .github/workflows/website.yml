@@ -1,10 +1,11 @@
-name: Website Test
+name: Website Build
 
 on:
   pull_request:
-      branches: [ master ]
+      branches: [ master, main ]
       paths:
           - 'website/**'
+
 jobs:
   build:
     name: 🔨 Build
@@ -13,39 +14,15 @@ jobs:
       - name: 🛒 Checkout
         uses: actions/checkout@v4
 
-      - name: 📦 Setup Node.js
-        uses: actions/setup-node@v4
+      - name: 📦 Setup Zola
+        uses: taiki-e/install-action@v2
         with:
-          node-version: 'lts/Hydrogen'
-          cache: 'npm'
-          cache-dependency-path: website/package-lock.json
+          tool: zola@0.22.1
 
-      - name: 🔧 Install
+      - name: ☑️ Check
         working-directory: website
-        run: npm install
+        run: zola check
 
       - name: 🔨 Build
         working-directory: website
-        run: npm run build
-
-  lint:
-    name: 💡 Lint
-    runs-on: ubuntu-latest
-    steps:
-      - name: 🛒 Checkout
-        uses: actions/checkout@v4
-
-      - name: 📦 Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 'lts/Hydrogen'
-          cache: 'npm'
-          cache-dependency-path: website/package-lock.json
-
-      - name: 🔧 Install
-        working-directory: website
-        run: npm install
-
-      - name: 💡 Lint
-        working-directory: website
-        run: npm run lint
+        run: zola build
