@@ -5,5 +5,5 @@ weight = 3
 
 [extra]
 homepage = "https://lottoprint.it"
-tags = ["Web App"]
+tags = ["web app"]
 +++

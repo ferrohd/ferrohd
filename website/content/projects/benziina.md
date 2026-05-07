@@ -5,5 +5,5 @@ weight = 4
 
 [extra]
 homepage = "https://benziina.app"
-tags = ["Mobile", "iOS", "Android"]
+tags = ["mobile", "ios", "android"]
 +++

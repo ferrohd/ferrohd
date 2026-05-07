@@ -5,5 +5,5 @@ weight = 6
 
 [extra]
 repo = "https://github.com/teapot-labs/identeapots"
-tags = ["TypeScript", "Library"]
+tags = ["typescript", "library"]
 +++

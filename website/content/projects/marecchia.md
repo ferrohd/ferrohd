@@ -5,5 +5,5 @@ weight = 2
 
 [extra]
 repo = "https://github.com/ferrohd/marecchia"
-tags = ["Rust", "WebAssembly", "P2P"]
+tags = ["rust", "webassembly", "p2p"]
 +++

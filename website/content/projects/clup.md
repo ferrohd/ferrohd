@@ -5,5 +5,5 @@ weight = 5
 
 [extra]
 repo = "https://github.com/ferrohd/CLup"
-tags = ["JavaScript", "Backend"]
+tags = ["javascript", "backend"]
 +++
