@@ -3,7 +3,7 @@ title = "sans-io, or how to write a protocol library once"
 date = 2026-05-07
 description = "How I built a MikroTik RouterOS client that runs on both Tokio and a 16MB router."
 [taxonomies]
-tags = ["rust", "networking"]
+tags = ["rust", "sans-io", "mikrotik"]
 +++
 
 I run MikroTik routers in my homelab. They're great little boxes, very customizable, and I've been wanting to manage them programmatically for a while now. Think Ubiquiti's Unifi controller, but for MikroTik (more on this in a future post :wink:).
