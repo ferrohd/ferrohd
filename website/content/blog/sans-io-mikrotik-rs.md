@@ -41,7 +41,7 @@ MikroTik's protocol works like this: each "word" is a variable-length integer pr
 
 You can have multiple commands in flight at once, responses come back interleaved, and you match them by tag. It's like HTTP/2 multiplexing but more... artisanal[^3].
 
-The documentation describes all of this in roughly the same level of detail I just did. Some things I figured out by staring at hex dumps.
+The documentation describes all of this in roughly the same level of detail I just did. Most of the things I figured out by staring at Wireshark dumps.
 
 ## the architecture
 
@@ -51,7 +51,7 @@ The workspace has three crates:
 ┌─────────────────────────────────────────────────────┐
 │  mikrotik-proto (sans-io, #![no_std])               │
 │                                                     │
-│  codec ──▶ response parsing                         │
+│  codec (response parsing)                           │
 │  command builder                                    │
 │  connection state machine (multiplexing)            │
 │  handshake (typestate login flow)                   │
@@ -60,7 +60,7 @@ The workspace has three crates:
          │                   │ poll_event()
          │                   ▼
 ┌─────────────────────────────────────────────────────┐
-│  mikrotik-tokio          OR   mikrotik-embassy      │
+│  mikrotik-tokio      OR       mikrotik-embassy      │
 │  (Tokio adapter)              (Embassy, no_std)     │
 └─────────────────────────────────────────────────────┘
 ```
@@ -101,7 +101,7 @@ No sockets, no runtime. Just data structures and methods that shuffle bytes betw
 
 ## typestate: making wrong code not compile
 
-Before you can send commands, you have to log in. I could enforce this at runtime with an `if !authenticated { return Err(...) }` check. But this is Rust, and I'm extra.
+Before you can send commands, you have to log in. I could enforce this at runtime with an `if !authenticated { return Err(...) }` check. But this is Rust, and I'm extra :nail_care:
 
 The `Handshaking` type has `receive()` and `poll_transmit()` but no `send_command()`. The method doesn't exist on the type. You call `advance()`, which *consumes self* and returns either `Pending(Handshaking)` (not done yet, keep feeding it data) or `Complete(Authenticated)` (you're in). Only `Authenticated` gives you access to the `Connection`.
 
@@ -157,7 +157,7 @@ This is where the sans-io thing pays off.
 
 **Tokio** spawns a background actor task. The user-facing `MikrotikDevice` is just a `mpsc::Sender` (cheap to clone, `Send + Sync`, share it across tasks, go wild). Each `send_command()` creates a dedicated `mpsc::channel` for that command's responses and hands back the receiver. The actor demultiplexes incoming events by tag and routes them to the right channel.
 
-The fun bit: if you drop the receiver (say, you don't care about a long-running `/tool/torch` command anymore), the actor detects the failed `try_send` and automatically sends `/cancel` to the router. RAII cancellation. Just drop the thing.
+The fun bit: if you drop the receiver (say, you don't care about a long-running `/tool/torch` command anymore), the actor detects the failed `try_send` and automatically sends `/cancel` to the router. RAII cancellation. [Just drop the thing](https://www.youtube.com/watch?v=tMe_5gVeRno).
 
 ```rust
 // tokio actor event loop (simplified)
@@ -206,24 +206,11 @@ loop {
 
 Squint at them. Same `Connection`, same `receive`/`poll_event`/`send_command`/`poll_transmit` dance, different I/O around it.
 
-Here's what actually changes between the two:
-
-|  | Tokio | Embassy |
-|---|---|---|
-| I/O traits | `tokio::io::AsyncRead + AsyncWrite` | `embedded_io_async::Read + Write` |
-| channels | `tokio::sync::mpsc` (heap, per-command) | `embassy_sync::Channel` (static, shared) |
-| select | `tokio::select!` macro | `embassy_futures::select()` fn |
-| cancellation | automatic (drop receiver) | manual |
-| read buffer | `vec![0u8; 8192]` (heap) | `[0u8; 2048]` (stack) |
-| adapter code | ~310 lines | ~210 lines (~80 of logic) |
-
-The protocol core is ~700 lines plus tests. The adapters are thin shells.
-
 ## testing
 
 This is honestly where I think sans-io earns its keep the most.
 
-The protocol core is pure sync Rust. No `#[tokio::test]`, no runtime, nothing. `#[test]`, construct a `Connection`, shove some bytes into `receive()`, assert on what comes out of `poll_event()`. I can feed data one byte at a time to prove incremental parsing works. I can throw random bytes at it with [proptest](https://github.com/proptest-rs/proptest) and assert it never panics. Tests run in microseconds.
+The protocol core is pure sync Rust. No `#[tokio::test]`, no runtime, nothing. `#[test]`, construct a `Connection`, shove some bytes into `receive()`, assert on what comes out of `poll_event()`. I can feed data one byte at a time to prove incremental parsing works. I can throw random bytes at it with [proptest](https://github.com/proptest-rs/proptest) and assert it never panics.
 
 ```rust
 #[test]
@@ -249,7 +236,7 @@ fn test_partial_receive() {
 
 The adapter tests spin up mock TCP servers that speak the MikroTik wire protocol, which is useful too, but by the time I'm testing the adapter the protocol logic is already done. The adapter test is really just "does the plumbing work", not "does the protocol parsing work".
 
-There's also a neat trick for testing the Embassy adapter: `embedded_io_adapters::FromTokio` wraps a Tokio `TcpStream` as `embedded_io_async::Read + Write`, so you test your `no_std` adapter code on your laptop with Tokio providing the transport. No dev board needed, just `cargo test`.
+There's also a neat trick for testing the Embassy adapter: `embedded_io_adapters::FromTokio` wraps a Tokio `TcpStream` as `embedded_io_async::Read + Write`, so you test your `no_std` adapter code on your laptop with Tokio providing the transport. Again, great news for a lazy person.
 
 ## was it worth it
 
@@ -257,13 +244,11 @@ More upfront work than just writing a Tokio client? Yes.
 
 You write manual state machines in the core instead of leaning on async/await. The `receive -> poll_event -> flush -> select` dance is something you have to get right, and if you forget to flush transmits before selecting, things stall in ways that aren't immediately obvious[^4].
 
-But when I needed Embassy support it was a weekend project, not a rewrite. The protocol tests run so fast I forget they're running. And `unsafe_code = "forbid"` at the workspace level, if you were wondering.
-
-I don't know if I'd recommend this for every protocol library. If you know for a fact you're only ever going to use Tokio, just use Tokio, save yourself the trouble. But if there's even a chance you'll need to run on a different runtime, or on a device where you can't afford to pull in a full async runtime... yeah. It's worth the upfront cost. For mikrotik-rs it was the right call.
+Honestly though, even if you don't care about multiple runtimes, do it for the testing. Being able to `#[test]` your entire protocol logic with zero async machinery, feed it garbage bytes with proptest and know it won't panic, run the whole suite in under a second... that alone is worth the pain of writing state machines by hand. I went back to a Tokio-coupled protocol parser recently for something unrelated and the difference in how fast you can iterate is night and day. Sans-io tests are just so much nicer to work with that I'd pick this approach again even if Tokio was the only runtime I ever planned to support.
 
 ## links
 
-- [mikrotik-rs on GitHub](https://github.com/ferrohd/mikrotik-rs) (AGPL-3.0, because knowledge is free and so is my library)
+- [mikrotik-rs on GitHub](https://github.com/ferrohd/mikrotik-rs)
 - [mikrotik-rs on crates.io](https://crates.io/crates/mikrotik-rs)
 - Thomas Eizinger's [Sans-IO post for Firezone](https://www.firezone.dev/blog/sans-io)
 - [sans-io.readthedocs.io](https://sans-io.readthedocs.io/)
