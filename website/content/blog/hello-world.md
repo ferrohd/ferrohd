@@ -12,4 +12,4 @@ New blog[^1].
 
 I plan to write about Rust, my homelab, and whatever else I feel like rambling about. No promises on frequency.
 
-[^1]: Got rid of the cringy website before this one[^1].
+[^1]: Got rid of the cringy website before this one.
