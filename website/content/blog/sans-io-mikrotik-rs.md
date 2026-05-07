@@ -1,6 +1,6 @@
 +++
 title = "sans-io, or how to write a protocol library once"
-date = 2026-05-08
+date = 2026-05-07
 description = "How I built a MikroTik RouterOS client that runs on both Tokio and a 16MB router."
 [taxonomies]
 tags = ["rust", "networking"]
