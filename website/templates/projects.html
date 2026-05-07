@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{%- block title -%}
+{{ section.title }} | {{ config.title }}
+{%- endblock -%}
+
+{%- block description -%}
+    {%- if section.description %}
+    <meta name="description" content="{{ section.description | markdown(inline=true) | striptags | safe }}">
+    {%- elif config.description %}
+    <meta name="description" content="{{ config.description | safe }}">
+    {%- endif %}
+{%- endblock -%}
+
+{%- block main -%}
+{%- filter indent -%}{%- filter indent -%}
+<header class="content">
+    <h1>Projects<span style="color: var(--accent-color)">.</span></h1>
+    <p>Open-source projects, libraries, and apps I've built or contributed to.</p>
+</header>
+
+{% if section.pages -%}
+{% for project in section.pages -%}
+{% set link = project.extra.repo | default(value=project.extra.homepage | default(value="#")) -%}
+<article class="post">
+    <header>
+        <h2 class="post-title">
+            <a href="{{ link }}" target="_blank" rel="noopener noreferrer">{{ project.title }}</a>
+        </h2>
+        {%- if project.extra.tags %}
+        <div class="post-tags">
+            {%- for tag in project.extra.tags %}
+            <span>#{{ tag }}</span>
+            {%- endfor %}
+        </div>
+        {%- endif %}
+    </header>
+    <p>{{ project.description }}</p>
+    {%- if project.extra.repo and project.extra.homepage %}
+    <p>
+        <a href="{{ project.extra.repo }}" target="_blank" rel="noopener noreferrer">[source]</a>
+        <span>::</span>
+        <a href="{{ project.extra.homepage }}" target="_blank" rel="noopener noreferrer">[homepage]</a>
+    </p>
+    {%- elif project.extra.repo %}
+    <p><a href="{{ project.extra.repo }}" target="_blank" rel="noopener noreferrer">[source] →</a></p>
+    {%- elif project.extra.homepage %}
+    <p><a href="{{ project.extra.homepage }}" target="_blank" rel="noopener noreferrer">[homepage] →</a></p>
+    {%- endif %}
+</article>
+{% endfor -%}
+{%- else -%}
+<p>No projects yet. Check back soon.</p>
+{%- endif %}
+{% endfilter %}{% endfilter %}
+{%- endblock -%}

@@ -1,0 +1,61 @@
+# The URL the site will be built for
+base_url = "https://alessandro.ferrara.it"
+
+# The site title
+title = "ferro."
+
+# The site description
+description = "Backend/Infra Engineer. Rust, databases, Linux, and cloud infrastructure."
+
+# The default author for pages
+author = "Alessandro Ferrara"
+
+# Use the Terminus theme
+theme = "terminus"
+
+# Whether to automatically compile all Sass files in the sass directory
+compile_sass = true
+
+# When set to "true", a feed is automatically generated.
+generate_feeds = true
+
+# Whether to build a search index to be used later on by a JavaScript library
+build_search_index = true
+
+taxonomies = [
+    { name = "tags", feed = true },
+]
+
+[markdown]
+render_emoji = true
+bottom_footnotes = true
+
+[markdown.highlighting]
+style = "inline"
+theme = "catppuccin-mocha"
+
+[extra]
+color_scheme = "terminus"
+favicon_emoji = "🧑‍💻"
+layout = "center"
+copy_button = true
+show_default_author = true
+feed_icon = true
+
+copyright = "© $YEAR $AUTHOR :: Powered by [Zola](https://www.getzola.org) :: Theme [Terminus](https://github.com/ebkalderon/terminus)"
+
+main_menu = [
+    { name = "home", url = "/", trailing_slash = true },
+    { name = "blog", url = "blog", trailing_slash = true },
+    { name = "projects", url = "projects", trailing_slash = true },
+    { name = "github", url = "https://github.com/ferrohd", new_tab = true },
+]
+
+socials = [
+    { name = "email", url = "mailto:alessandr2.ferrara@mail.polimi.it" },
+    { name = "github", url = "https://github.com/ferrohd" },
+    { name = "linkedin", url = "https://linkedin.com/in/aleferrara" },
+]
+
+[extra.content_security_policy]
+enable = false
