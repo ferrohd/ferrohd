@@ -10,42 +10,40 @@ I run MikroTik routers in my homelab. They're great little boxes, very customiza
 
 <!-- more -->
 
-MikroTik has an API for this. The documentation is [one Confluence page](https://help.mikrotik.com/docs/spaces/ROS/pages/47579160/API). That's it. The whole thing[^1]. No official client library in any language, just a list of community projects at the bottom of said page. The protocol itself is a binary, length-prefixed, word-based format that feels like it was designed in 2006, because it probably was.
+MikroTik has an API for this. The documentation is [one Confluence page](https://help.mikrotik.com/docs/spaces/ROS/pages/47579160/API). That's it. The whole thing[^1]. No official client library in any language, just a list of community projects at the bottom of said page. The protocol is a binary, length-prefixed, word-based format that feels like it was designed in 2006, because it probably was.
 
 So I built [mikrotik-rs](https://github.com/ferrohd/mikrotik-rs).
 
 ## the problem
 
-I need this library to work in two very different contexts. On one hand, there's a server running the dashboard[^2], where Tokio and the full standard library are available and life is good. On the other, I want to run things on the router itself, which has maybe 16MB of storage and where everything has to be statically linked. I'm already doing this, actually, a tiny `scratch` Docker image with a statically linked binary that uses the library...but that's another post.
+I need this library to work in two very different places. There's a server running the dashboard[^2] where Tokio and the full standard library are available, life is good. And then there's the router itself, which has maybe 16MB of storage and where everything has to be statically linked. I'm already doing this actually, a tiny `scratch` Docker image with a statically linked binary that uses the library...but that's another post.
 
-Writing the library twice, once for Tokio and once for whatever fits on the router, is not happening. I'm lazy. Productively lazy.
-
-This is where sans-io comes in.
+Writing the library twice (once for Tokio, once for whatever fits on the router) is not happening. I'm lazy. Productively lazy.
 
 ## sans-io
 
-The idea is simple: your protocol logic doesn't do any I/O. None. No sockets, no async, no runtime dependency. You hand it bytes, you get events and bytes to send back out. The actual networking (the "read bytes from TCP and write bytes to TCP" part) happens in a thin adapter layer that you write separately for each runtime you care about.
+So the idea is: your protocol logic doesn't do any I/O. None. You hand it bytes, you get events and bytes to send back out. The actual networking (the "read bytes from TCP, write bytes to TCP" part) happens in a thin adapter layer that you write separately for each runtime you care about.
 
-The concept came from the [Python community](https://sans-io.readthedocs.io/) around 2016 (Cory Benfield's [PyCon talk](https://www.youtube.com/watch?v=7cC3_jGwl_U) is a good watch). In Rust, [quinn-proto](https://github.com/quinn-rs/quinn/tree/main/quinn-proto) (QUIC) and [str0m](https://github.com/algesten/str0m) (WebRTC) follow this pattern. Thomas Eizinger wrote a [really good post](https://www.firezone.dev/blog/sans-io) about it for Firezone if you want the deep theory.
+The concept came from the [Python community](https://sans-io.readthedocs.io/) around 2016 (Cory Benfield's [PyCon talk](https://www.youtube.com/watch?v=7cC3_jGwl_U) is a good watch). In Rust, [quinn-proto](https://github.com/quinn-rs/quinn/tree/main/quinn-proto) (QUIC) and [str0m](https://github.com/algesten/str0m) (WebRTC) do this. Thomas Eizinger wrote a [really good post](https://www.firezone.dev/blog/sans-io) about it for Firezone if you want the theory.
 
-Most of those examples are UDP protocols though. MikroTik's API is TCP, stream-oriented, with framing and partial reads and all the fun that comes with that. Slightly different vibe, same idea.
+Most of those are UDP protocols though. MikroTik's API is TCP, stream-oriented, with framing and partial reads and all the fun that comes with that. Different vibe, same idea.
 
 ## the wire protocol, briefly
 
-MikroTik's protocol works like this: each "word" is a variable-length integer prefix (1 to 5 bytes depending on the length) followed by the content bytes. A "sentence" is a bunch of words terminated by a zero-length word (just `0x00`). There are a few word types:
+Each "word" is a variable-length integer prefix (1 to 5 bytes depending on the length) followed by the content bytes. A "sentence" is a bunch of words terminated by a zero-length word (just `0x00`). There are a few word types:
 
 - commands: `/interface/print`, `/system/resource/print`
 - attributes: `=name=ether1`, `=disabled=no`
 - tags: `.tag=<some-uuid>` for multiplexing
 - replies: `!re` (data), `!done` (finished), `!trap` (error), `!fatal` (you're dead)
 
-You can have multiple commands in flight at once, responses come back interleaved, and you match them by tag. It's like HTTP/2 multiplexing but more... artisanal[^3].
+You can have multiple commands in flight at once, responses come back interleaved, and you match them by tag. Like HTTP/2 multiplexing but more...artisanal[^3].
 
-The documentation describes all of this in roughly the same level of detail I just did. Most of the things I figured out by staring at Wireshark dumps.
+The documentation describes all of this in roughly the same level of detail I just did. Most of what I know I figured out by staring at Wireshark dumps.
 
 ## the architecture
 
-The workspace has three crates:
+Three crates:
 
 ```text
 ┌─────────────────────────────────────────────────────┐
@@ -97,7 +95,7 @@ pub struct Connection {
 }
 ```
 
-No sockets, no runtime. Just data structures and methods that shuffle bytes between queues. The adapter's only job is to connect those queues to real I/O.
+No sockets, no runtime. Data structures and methods that shuffle bytes between queues. The adapter just connects those queues to real I/O.
 
 ## typestate: making wrong code not compile
 
@@ -153,9 +151,7 @@ You pattern match the result and either keep going or transition. There's no way
 
 ## two adapters, one protocol
 
-This is where the sans-io thing pays off.
-
-**Tokio** spawns a background actor task. The user-facing `MikrotikDevice` is just a `mpsc::Sender` (cheap to clone, `Send + Sync`, share it across tasks, go wild). Each `send_command()` creates a dedicated `mpsc::channel` for that command's responses and hands back the receiver. The actor demultiplexes incoming events by tag and routes them to the right channel.
+The Tokio adapter spawns a background actor task. The user-facing `MikrotikDevice` is just a `mpsc::Sender` (cheap to clone, `Send + Sync`, share it across tasks, go wild). Each `send_command()` creates a dedicated `mpsc::channel` for that command's responses and hands back the receiver. The actor demultiplexes incoming events by tag and routes them to the right channel.
 
 The fun bit: if you drop the receiver (say, you don't care about a long-running `/tool/torch` command anymore), the actor detects the failed `try_send` and automatically sends `/cancel` to the router. RAII cancellation. [Just drop the thing](https://www.youtube.com/watch?v=tMe_5gVeRno).
 
@@ -183,7 +179,7 @@ while !shutdown {
 }
 ```
 
-**Embassy** is very different. `no_std`, no heap for channels, constrained everything. Instead of an actor with per-command channels, it's a single `async fn run()` that takes statically-allocated channels as parameters. All events go to one shared channel and the consumer filters by tag. Stack buffers instead of heap. `embassy_futures::select()` instead of `tokio::select!`.
+The Embassy adapter is very different. `no_std`, no heap for channels, constrained everything. Instead of an actor with per-command channels, it's a single `async fn run()` that takes statically-allocated channels as parameters. All events go to one shared channel and the consumer filters by tag. Stack buffers instead of heap. `embassy_futures::select()` instead of `tokio::select!`.
 
 ```rust
 // embassy event loop (simplified)
@@ -208,9 +204,9 @@ Squint at them. Same `Connection`, same `receive`/`poll_event`/`send_command`/`p
 
 ## testing
 
-This is honestly where I think sans-io earns its keep the most.
+Honestly this might be where sans-io pays for itself the most.
 
-The protocol core is pure sync Rust. No `#[tokio::test]`, no runtime, nothing. `#[test]`, construct a `Connection`, shove some bytes into `receive()`, assert on what comes out of `poll_event()`. I can feed data one byte at a time to prove incremental parsing works. I can throw random bytes at it with [proptest](https://github.com/proptest-rs/proptest) and assert it never panics.
+The protocol core is pure sync Rust. No `#[tokio::test]`, no runtime. Just `#[test]`, construct a `Connection`, shove some bytes into `receive()`, assert on what comes out of `poll_event()`. I can feed data one byte at a time to prove incremental parsing works. I can throw random bytes at it with [proptest](https://github.com/proptest-rs/proptest) and assert it never panics.
 
 ```rust
 #[test]
@@ -234,23 +230,25 @@ fn test_partial_receive() {
 }
 ```
 
-The adapter tests spin up mock TCP servers that speak the MikroTik wire protocol, which is useful too, but by the time I'm testing the adapter the protocol logic is already done. The adapter test is really just "does the plumbing work", not "does the protocol parsing work".
+The adapter tests spin up mock TCP servers that speak the MikroTik wire protocol, which is useful too, but by the time I'm testing the adapter the protocol logic is already done. The adapter test is really just "does the plumbing work".
 
-There's also a neat trick for testing the Embassy adapter: `embedded_io_adapters::FromTokio` wraps a Tokio `TcpStream` as `embedded_io_async::Read + Write`, so you test your `no_std` adapter code on your laptop with Tokio providing the transport. Again, great news for a lazy person.
+There's also a neat trick for testing the Embassy adapter: `embedded_io_adapters::FromTokio` wraps a Tokio `TcpStream` as `embedded_io_async::Read + Write`, so you test your `no_std` adapter code on your laptop with Tokio providing the transport. Great news if you're lazy.
 
 ## was it worth it
 
-More upfront work than just writing a Tokio client? Yes.
+More upfront work than just writing a Tokio client? Yeah.
 
 You write manual state machines in the core instead of leaning on async/await. The `receive -> poll_event -> flush -> select` dance is something you have to get right, and if you forget to flush transmits before selecting, things stall in ways that aren't immediately obvious[^4].
 
-Honestly though, even if you don't care about multiple runtimes, do it for the testing. Being able to `#[test]` your entire protocol logic with zero async machinery, feed it garbage bytes with proptest and know it won't panic, run the whole suite in under a second... that alone is worth the pain of writing state machines by hand. I went back to a Tokio-coupled protocol parser recently for something unrelated and the difference in how fast you can iterate is night and day. Sans-io tests are just so much nicer to work with that I'd pick this approach again even if Tokio was the only runtime I ever planned to support.
+But even if I didn't care about multiple runtimes...I'd probably still do it? Being able to `#[test]` the entire protocol logic with zero async machinery, feed it garbage bytes with proptest and know it won't panic, run the whole suite in under a second. I went back to a Tokio-coupled protocol parser recently for something unrelated and the difference in iteration speed was night and day. The tests are just so much nicer to work with that I'd pick this approach again even if Tokio was the only runtime I ever planned to support.
+
+So yeah. Do it for the testing if nothing else.
 
 ## links
 
 - [mikrotik-rs on GitHub](https://github.com/ferrohd/mikrotik-rs)
 - [mikrotik-rs on crates.io](https://crates.io/crates/mikrotik-rs)
-- Thomas Eizinger's [Sans-IO post for Firezone](https://www.firezone.dev/blog/sans-io)
+- Thomas Eizinger's [sans-io post for Firezone](https://www.firezone.dev/blog/sans-io)
 - [sans-io.readthedocs.io](https://sans-io.readthedocs.io/)
 - [quinn-proto](https://github.com/quinn-rs/quinn/tree/main/quinn-proto), [str0m](https://github.com/algesten/str0m)
 
