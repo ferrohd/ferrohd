@@ -423,7 +423,7 @@ More work than a struct with an `if frame > 10` check? Yeah.
 
 But the resulting API is hard to misuse in ways that I find satisfying. The compiler catches things that would otherwise be unit tests, and the things it doesn't catch, [proptest](https://github.com/proptest-rs/proptest) handles with random roll sequences across all three rulesets, asserting scores never exceed 300, games always terminate, and cumulatives always add up.
 
-Honestly though, the real motivation was that I'd been bowling more, and scoring by hand is tedious, and I thought "I could automate this"...and then the typestate rabbit hole opened up and here we are, 2000 lines of Rust later, with a generic multi-ruleset bowling engine that handles splits, fouls, deadwood policies, and candlepin scoring.
+Honestly though, the real motivation was that I'd been bowling more, and I wanted to understand the scoring better, and I thought "I could model this"...and then the typestate rabbit hole opened up and here we are, 2000 lines of Rust later, with a generic multi-ruleset bowling engine that handles splits, fouls, deadwood policies, and candlepin scoring.
 
 All because a friend handed me a cinnamon-scented bowling ball.
 
