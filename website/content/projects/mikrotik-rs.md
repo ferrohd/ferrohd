@@ -6,5 +6,5 @@ weight = 1
 [extra]
 repo = "https://github.com/ferrohd/mikrotik-rs"
 homepage = "https://crates.io/crates/mikrotik-rs"
-tags = ["rust", "tokio", "async"]
+tags = ["rust", "sans-io", "async"]
 +++
