@@ -18,7 +18,7 @@ Anyway, with the ball came more bowling, and with more bowling came a personal b
 
 And with more bowling came the inevitable: "I wonder if I could model this in Rust."
 
-So I built [bowling-rs](https://github.com/ferrohd/bowling-rs).
+So I built [bowling](https://github.com/ferrohd/bowling). It was originally called `bowling-rs`, but that name was already taken on crates.io. The `bowling` crate belonged to [hexjelly](https://github.com/hexjelly) and hadn't been updated in 8 years, so I reached out and they kindly transferred ownership to me.
 
 ## the scoring problem
 
@@ -97,7 +97,7 @@ You write little `.rs` files that contain the code that *should not compile*. Yo
 So for "you can't roll on a completed game", the test file is just:
 
 ```rust
-use bowling_rs::prelude::*;
+use bowling::prelude::*;
 
 fn main() {
     let game: Game<TenPin, Complete> = todo!();
@@ -110,7 +110,7 @@ That's it. trybuild compiles it, sees the `E0599` ("method not found"), checks i
 There's another one for the builder:
 
 ```rust
-use bowling_rs::prelude::*;
+use bowling::prelude::*;
 
 fn main() {
     let _builder = GameBuilder::<TenPin>::new();
@@ -429,8 +429,8 @@ All because a friend handed me a cinnamon-scented bowling ball.
 
 ## links
 
-- [bowling-rs on GitHub](https://github.com/ferrohd/bowling-rs)
-- [bowling-rs on crates.io](https://crates.io/crates/bowling-rs)
+- [bowling on GitHub](https://github.com/ferrohd/bowling)
+- [bowling on crates.io](https://crates.io/crates/bowling)
 - [trybuild](https://github.com/dtolnay/trybuild), compile-fail testing
 - [proptest](https://github.com/proptest-rs/proptest), property-based testing
 
