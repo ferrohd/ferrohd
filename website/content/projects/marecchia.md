@@ -1,7 +1,7 @@
 +++
 title = "marecchia"
 description = "P2P browser-to-browser streaming via WebAssembly."
-weight = 2
+weight = 3
 
 [extra]
 repo = "https://github.com/ferrohd/marecchia"
