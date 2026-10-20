@@ -1,7 +1,7 @@
 +++
 title = "LottoPrint"
 description = "Italian lottery results visualization web app."
-weight = 4
+weight = 5
 
 [extra]
 homepage = "https://lottoprint.it"
